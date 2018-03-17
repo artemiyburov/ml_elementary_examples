@@ -30,7 +30,9 @@ class SGClassifier(BaseEstimator, ClassifierMixin):
         train_size = np.shape(X)
         self.X_ = np.c_[X, np.ones(train_size[0])]
         self.y_ = y
-        weights = np.zeros(train_size[1] + 1)
+        #weights = np.zeros(train_size[1] + 1)
+        weights = (1./train_size[0])*np.random.random_sample(
+                                     train_size[1] + 1)-.5/train_size[0]
         losses = loss_function_x(np.dot(self.X_, weights)*y)
         Q = np.sum(losses)
         
@@ -43,7 +45,7 @@ class SGClassifier(BaseEstimator, ClassifierMixin):
             weights = weights-self.nu*self.X_[idx]*y[idx]*dloss_function_dx_x(
                                                           np.dot(self.X_[idx],weights))
             Q = (1-self.la)*Q + self.la*losses[idx]
-            print(weights)
+            #print(weights)
         ax.set_title('Q(cycles)')
         plt.show()
         self.weights = weights
